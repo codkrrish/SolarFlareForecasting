@@ -1,7 +1,7 @@
 from astropy.io import fits
 import matplotlib.pyplot as plt
 
-filename = "/home/k/projBAH/data/solex/pi_files/AL1_SOLEXS_20240202_SDD2_L1.pi"
+filename = "data/pi_files/AL1_SOLEXS_20240202_SDD2_L1.pi"
 
 with fits.open(filename) as hdul:
 

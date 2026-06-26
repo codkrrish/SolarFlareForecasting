@@ -1,10 +1,9 @@
 from pathlib import Path
 from astropy.io import fits
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Root directory containing .lc files
-root_dir = "/home/k/projBAH/data/solex/lc_files"
+root_dir = r"data/lcfiles"
 
 # Find all .lc files recursively
 lc_files = sorted(Path(root_dir).rglob("*.lc"))

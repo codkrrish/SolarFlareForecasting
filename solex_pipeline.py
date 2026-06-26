@@ -2,9 +2,9 @@
 #  CONFIGURATION  ← edit these before running
 # ─────────────────────────────────────────────
 
-ROOT_DIR         = "/home/k/Downloads"    # folder containing all .zip files
-TARGET_DIR       = "/home/k/projBAH/data/solex"       # destination for lc_files/ and pi_files/
-REVIEW_DIR       = "/home/k/projBAH/data/solex/review"       # destination for flare .lc files (manual check)
+ROOT_DIR         = ""    # folder containing all .zip files
+TARGET_DIR       = ""       # destination for lc_files/ and pi_files/
+REVIEW_DIR       = ""       # destination for flare .lc files (manual check)
 
 MIN_GTI_EXPOSURE = 0        # minimum total GTI exposure in seconds to be considered valid
                              # set to 0 to only use row-count check (recommended default)
