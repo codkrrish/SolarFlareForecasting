@@ -3,8 +3,8 @@
 # ─────────────────────────────────────────────
 
 ROOT_DIR         = ""    # folder containing all .zip files
-TARGET_DIR       = ""       # destination for lc_files/ and pi_files/
-REVIEW_DIR       = ""       # destination for flare .lc files (manual check)
+TARGET_DIR       = "/data"       # destination for lc_files/ and pi_files/
+REVIEW_DIR       = "/data"       # destination for flare .lc files (manual check)
 
 MIN_GTI_EXPOSURE = 0        # minimum total GTI exposure in seconds to be considered valid
                              # set to 0 to only use row-count check (recommended default)
@@ -29,7 +29,7 @@ import numpy as np
 from astropy.io import fits
 from astropy.time import Time
 
-# ── Logging setup ────────────────────────────────────────────────────────────
+
 
 LOG_FILE = os.path.join(TARGET_DIR, "pipeline.log")
 CSV_FILE = os.path.join(TARGET_DIR, "flare_labels.csv")
@@ -68,7 +68,6 @@ def append_csv_rows(rows: list[dict]):
             w.writerow(row)
 
 
-# ── GTI helpers ──────────────────────────────────────────────────────────────
 
 def load_gti(gti_gz_path: str) -> tuple[int, float]:
     """
@@ -108,7 +107,6 @@ def gti_is_valid(n_rows: int, exposure: float) -> bool:
     return True
 
 
-# ── LC helpers ───────────────────────────────────────────────────────────────
 
 def load_lc(lc_gz_path: str) -> tuple[np.ndarray, np.ndarray, str]:
     """
@@ -138,8 +136,6 @@ def load_lc(lc_gz_path: str) -> tuple[np.ndarray, np.ndarray, str]:
     return raw_times[valid], raw_counts[valid], date_obs
 
 
-# ── Flare detection ──────────────────────────────────────────────────────────
-
 def detect_flares(times: np.ndarray, counts: np.ndarray) -> list[dict]:
     """
     Returns a list of flare event dicts.  Empty list → no flare.
@@ -164,7 +160,6 @@ def detect_flares(times: np.ndarray, counts: np.ndarray) -> list[dict]:
     spike_times  = times[spike_mask]
     spike_counts = counts[spike_mask]
 
-    # Split into events wherever the time gap exceeds FLARE_GAP_SEC
     gaps = np.diff(spike_times)
     boundaries = np.where(gaps > FLARE_GAP_SEC)[0]
 
@@ -193,10 +188,9 @@ def detect_flares(times: np.ndarray, counts: np.ndarray) -> list[dict]:
 
 
 def unix_to_iso(unix_sec: float) -> str:
-    return Time(unix_sec, format="unix").iso   # 'YYYY-MM-DD HH:MM:SS.sss'
+    return Time(unix_sec, format="unix").iso  
 
 
-# ── File extraction helpers ───────────────────────────────────────────────────
 
 def decompress_gz(src_gz: str, dst: str):
     """
@@ -216,7 +210,6 @@ def gz_stem(gz_path: str) -> str:
     return os.path.basename(gz_path)[:-3]   # remove '.gz'
 
 
-# ── Per-SDD processing ────────────────────────────────────────────────────────
 
 def process_sdd(
     sdd_name: str,          # 'SDD1' or 'SDD2'
@@ -236,7 +229,6 @@ def process_sdd(
     """
     log = logging.getLogger()
 
-    # ── Locate GTI file ──────────────────────────────────────────────────────
     gti_files = glob.glob(os.path.join(sdd_dir, "*.gti.gz"))
     if not gti_files:
         log.warning(f"[{zip_basename}] [{sdd_name}] No .gti.gz found — skipping SDD.")
@@ -244,7 +236,6 @@ def process_sdd(
 
     gti_path = gti_files[0]
 
-    # ── GTI check ────────────────────────────────────────────────────────────
     try:
         n_rows, exposure = load_gti(gti_path)
     except Exception:
@@ -263,7 +254,7 @@ def process_sdd(
         f"(rows={n_rows}, exposure={exposure:.0f}s)."
     )
 
-    # ── Locate LC file ───────────────────────────────────────────────────────
+
     lc_files = glob.glob(os.path.join(sdd_dir, "*.lc.gz"))
     if not lc_files:
         log.warning(
@@ -273,14 +264,12 @@ def process_sdd(
         return True   # GTI was valid; LC absence is logged but SDD counts as visited
 
     lc_src = lc_files[0]
-    lc_filename = gz_stem(lc_src)   # e.g. AL1_SOLEXS_20240415_SDD2_L1.lc
-
-    # ── Decompress LC → TARGET_DIR/lc_files/<zip_stem>/<sdd_name>/<filename> ──
+    lc_filename = gz_stem(lc_src)
     lc_dst = os.path.join(TARGET_DIR, "lc_files", lc_filename)
     decompress_gz(lc_src, lc_dst)
     log.info(f"[{zip_basename}] [{sdd_name}] LC extracted → {lc_dst}")
 
-    # ── Flare detection ───────────────────────────────────────────────────────
+
     try:
         times, counts, date_obs = load_lc(lc_src)
     except Exception:
@@ -296,13 +285,13 @@ def process_sdd(
         )
         return True
 
-    # ── Flare found ───────────────────────────────────────────────────────────
+
     log.info(
         f"[{zip_basename}] [{sdd_name}] FLARE DETECTED — "
         f"{len(events)} event(s) on {date_obs}."
     )
 
-    # Build CSV rows
+
     csv_rows = []
     for i, ev in enumerate(events, start=1):
         csv_rows.append({
@@ -325,18 +314,17 @@ def process_sdd(
         )
     append_csv_rows(csv_rows)
 
-    # ── Copy PI file → TARGET_DIR/pi_files/YYYYMMDD/ ─────────────────────────
+
     pi_files = glob.glob(os.path.join(sdd_dir, "*.pi.gz"))
     if pi_files:
         pi_src = pi_files[0]
-        pi_filename = gz_stem(pi_src)   # e.g. AL1_SOLEXS_20240415_SDD2_L1.pi
+        pi_filename = gz_stem(pi_src) 
         pi_dst = os.path.join(TARGET_DIR, "pi_files", pi_filename)
         decompress_gz(pi_src, pi_dst)
         log.info(f"[{zip_basename}] [{sdd_name}] PI extracted → {pi_dst}")
     else:
         log.warning(f"[{zip_basename}] [{sdd_name}] Flare detected but no .pi.gz found.")
 
-    # ── Decompress LC → REVIEW_DIR/<zip_stem>/<sdd_name>/<filename> ──────────
     review_dst = os.path.join(REVIEW_DIR, lc_filename)
     decompress_gz(lc_src, review_dst)
     log.info(f"[{zip_basename}] [{sdd_name}] LC extracted to review → {review_dst}")
@@ -344,7 +332,6 @@ def process_sdd(
     return True
 
 
-# ── Per-zip processing ────────────────────────────────────────────────────────
 
 def process_zip(zip_path: str):
     zip_basename = os.path.basename(zip_path)
@@ -366,8 +353,7 @@ def process_zip(zip_path: str):
         with zipfile.ZipFile(zip_path, "r") as zf:
             zf.extractall(tmp_dir)
 
-        # Find the top-level extracted folder
-        # (e.g. AL1_SLX_L1_20240415_v1.0/)
+
         top_dirs = [
             d for d in os.listdir(tmp_dir)
             if os.path.isdir(os.path.join(tmp_dir, d))
@@ -400,7 +386,7 @@ def process_zip(zip_path: str):
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+
 
 def main():
     setup_logging()

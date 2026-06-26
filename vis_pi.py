@@ -24,7 +24,7 @@ with fits.open(filename) as hdul:
     print("\nColumns:")
     print(cols)
 
-    # X axis
+
     for candidate in ["CHANNEL", "PI"]:
         if candidate in cols:
             x = data[candidate]
@@ -33,7 +33,6 @@ with fits.open(filename) as hdul:
     else:
         raise ValueError("No CHANNEL/PI column found")
 
-    # Y axis
     for candidate in ["COUNTS", "RATE"]:
         if candidate in cols:
             y = data[candidate]

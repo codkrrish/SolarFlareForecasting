@@ -1,18 +1,3 @@
-"""
-SoLEXS Flare Analysis Tool
-===========================
-Given a SoLEXS .lc file, this script:
-  1. Reads the light curve (TIME + COUNTS columns)
-  2. Fetches GOES-18 XRS data for the same day via SunPy
-  3. Detects flares using TWO independent methods on the SoLEXS LC
-  4. Classifies each flare using GOES XRS flux (official GOES classes)
-  5. Produces a combined plot AND separate side-by-side plots
-
-Dependencies:
-    pip install sunpy astropy scipy matplotlib numpy
-    pip install sunpy[net]   # for Fido downloads
-"""
-
 import re
 import sys
 from datetime import datetime, timedelta, timezone
@@ -25,17 +10,13 @@ from matplotlib.patches import Patch
 from matplotlib.lines import Line2D
 
 from astropy.io import fits
-from astropy.time import Time
-import astropy.units as u
 
 from scipy.signal import find_peaks
 
 from sunpy.net import Fido, attrs as a
 import sunpy.timeseries as ts
 
-# ─────────────────────────────────────────────────────────────────────────────
 # GOES FLARE CLASSIFICATION  (1–8 Å band, W/m²)
-# ─────────────────────────────────────────────────────────────────────────────
 GOES_CLASSES = [
     ("X", 1e-4),
     ("M", 1e-5),
@@ -53,14 +34,8 @@ def goes_class(flux_wm2: float) -> str:
     return "sub-A"
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 1 – PARSE THE .lc FILENAME TO EXTRACT DATE AND DETECTOR
-# ─────────────────────────────────────────────────────────────────────────────
 def parse_lc_filename(lc_path: Path):
-    """
-    Extract observation date (datetime) and detector name from the filename.
-    Expected pattern: AL1_SOLEXS_YYYYMMDD_SDDX_L1.lc
-    """
     pattern = r"AL1_SOLEXS_(\d{8})_(SDD\d)_L1"
     match = re.search(pattern, lc_path.name, re.IGNORECASE)
     if not match:
@@ -73,14 +48,8 @@ def parse_lc_filename(lc_path: Path):
     return obs_date, detector
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 2 – READ THE SoLEXS LIGHT CURVE
-# ─────────────────────────────────────────────────────────────────────────────
 def read_lc(lc_path: Path):
-    """
-    Read TIME and COUNTS (or RATE) from the .lc FITS file.
-    TIME is Unix seconds; returns datetime array and count array.
-    """
     with fits.open(lc_path) as hdul:
         data = hdul[1].data
         unix_time = data["TIME"].astype(float)
@@ -100,15 +69,8 @@ def read_lc(lc_path: Path):
     return times_utc, counts, ylabel
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 3 – FETCH GOES-18 XRS DATA
-# ─────────────────────────────────────────────────────────────────────────────
 def fetch_goes_xrs(obs_date: datetime):
-    """
-    Download GOES-18 XRS data for the observation day using SunPy Fido.
-    Falls back to GOES-16 if GOES-18 is unavailable.
-    Returns a SunPy TimeSeries object.
-    """
     t_start = obs_date.strftime("%Y-%m-%d")
     t_end   = (obs_date + timedelta(days=1)).strftime("%Y-%m-%d")
 
@@ -133,17 +95,8 @@ def fetch_goes_xrs(obs_date: datetime):
     raise RuntimeError("Could not fetch XRS data from GOES-18, 17, or 16.")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 4a – FLARE DETECTION: SIMPLE THRESHOLD METHOD
-# ─────────────────────────────────────────────────────────────────────────────
 def detect_flares_threshold(times, counts, sigma=5, min_duration_sec=60):
-    """
-    Detect flares by looking for sustained excursions above
-    background + sigma * std.
-
-    Returns list of dicts with keys: start, peak, end, peak_counts
-    """
-    # Estimate background as the lower 20th percentile (avoids flare contamination)
     bg   = np.nanpercentile(counts, 20)
     std  = np.nanstd(counts[counts <= np.nanpercentile(counts, 80)])
     threshold = bg + sigma * std
@@ -194,15 +147,9 @@ def detect_flares_threshold(times, counts, sigma=5, min_duration_sec=60):
     return flares, threshold, bg
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 4b – FLARE DETECTION: SCIPY PEAK-FINDING METHOD
-# ─────────────────────────────────────────────────────────────────────────────
 def detect_flares_peaks(times, counts, prominence_factor=5, width_sec=60):
-    """
-    Use scipy.signal.find_peaks with prominence and width constraints.
 
-    Returns list of dicts with keys: start, peak, end, peak_counts
-    """
     bg         = np.nanpercentile(counts, 20)
     std        = np.nanstd(counts[counts <= np.nanpercentile(counts, 80)])
     prominence = prominence_factor * std
@@ -246,16 +193,9 @@ def detect_flares_peaks(times, counts, prominence_factor=5, width_sec=60):
     return flares, prominence, bg
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 5 – CLASSIFY FLARES USING GOES XRS
-# ─────────────────────────────────────────────────────────────────────────────
 def classify_flares_with_goes(flares, goes_ts):
-    """
-    For each detected flare, look up the GOES XRS long-channel (1–8 Å)
-    flux at the SoLEXS peak time and assign a GOES class.
 
-    Modifies flares in-place, adding keys: 'goes_flux', 'goes_class'
-    """
     goes_df   = goes_ts.to_dataframe()
     # SunPy XRS column names vary; try common ones
     long_col  = None
@@ -298,9 +238,7 @@ def classify_flares_with_goes(flares, goes_ts):
     return flares, long_col
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # STEP 6 – PLOTTING
-# ─────────────────────────────────────────────────────────────────────────────
 FLARE_COLORS = ["#e63946", "#f4a261", "#2a9d8f", "#8338ec", "#fb5607"]
 
 def _shade_flares(ax, flares, alpha=0.15):
@@ -327,12 +265,12 @@ def plot_combined(lc_times, lc_counts, lc_ylabel,
                   flares_thresh, flares_peaks,
                   obs_date, detector, sat_num,
                   threshold_val, peaks_prominence):
-    """
-    Single figure with 3 stacked panels:
-      Panel 1 – SoLEXS LC + threshold detections
-      Panel 2 – SoLEXS LC + peak-finding detections
-      Panel 3 – GOES XRS 1-8 Å flux with flare class labels
-    """
+
+    #Single figure with 3 stacked panels:
+      #Panel 1 – SoLEXS LC + threshold detections
+      #Panel 2 – SoLEXS LC + peak-finding detections
+      #Panel 3 – GOES XRS 1-8 Å flux with flare class labels
+
     goes_df   = goes_ts.to_dataframe()
     if goes_df.index.tz is None:
         goes_df.index = goes_df.index.tz_localize("UTC")
@@ -418,13 +356,7 @@ def plot_separate(lc_times, lc_counts, lc_ylabel,
                   flares_thresh, flares_peaks,
                   obs_date, detector, sat_num,
                   threshold_val):
-    """
-    4-panel side-by-side figure (2×2):
-      [0,0] SoLEXS LC full day
-      [0,1] GOES XRS full day
-      [1,0] SoLEXS LC zoom on largest flare (threshold)
-      [1,1] GOES XRS zoom on same largest flare
-    """
+
     goes_df = goes_ts.to_dataframe()
     if goes_df.index.tz is None:
         goes_df.index = goes_df.index.tz_localize("UTC")
@@ -532,9 +464,6 @@ def plot_separate(lc_times, lc_counts, lc_ylabel,
     print("  Saved: solexs_separate_plots.png")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# STEP 7 – PRINT SUMMARY
-# ─────────────────────────────────────────────────────────────────────────────
 def print_summary(flares_thresh, flares_peaks, detector, obs_date):
     print("\n" + "═" * 65)
     print(f"  FLARE DETECTION SUMMARY  |  {obs_date.strftime('%Y-%m-%d')}  |  {detector}")
@@ -561,48 +490,8 @@ def print_summary(flares_thresh, flares_peaks, detector, obs_date):
     show(flares_thresh, "Threshold Method (5σ above background)")
     show(flares_peaks,  "Peak-Finder Method (scipy prominence)")
 
-#     print("\n" + "─" * 65)
-#     print("  CLASSIFICATION LOGIC")
-#     print("─" * 65)
-#     print("""
-#   1. Background estimation:
-#        The lower 20th-percentile of the SoLEXS count rate is taken
-#        as the quiet-Sun background. The standard deviation is computed
-#        from data below the 80th percentile (flare-free estimate).
 
-#   2. Method 1 — Threshold:
-#        Any continuous interval where counts > background + 5σ AND
-#        lasting ≥ 60 s is flagged as a flare.  The 5σ cut means only
-#        ~1-in-3.5 million chance of a false positive per sample.
-
-#   3. Method 2 — SciPy find_peaks:
-#        Uses 'prominence' (how much a peak stands out from its local
-#        neighbourhood) ≥ 5σ AND minimum width ≥ 60 s.  This is better
-#        at separating overlapping peaks in complex active regions.
-
-#   4. GOES classification (official):
-#        At the SoLEXS-detected peak time, we look up the GOES XRS
-#        1–8 Å flux (± 5 min window, take max) and apply:
-#            X  ≥ 1×10⁻⁴ W/m²
-#            M  ≥ 1×10⁻⁵ W/m²   (e.g. M2.3 = 2.3 × 10⁻⁵ W/m²)
-#            C  ≥ 1×10⁻⁶ W/m²
-#            B  ≥ 1×10⁻⁷ W/m²
-#            A  <  1×10⁻⁷ W/m²
-#        The sub-class number = flux / class_threshold (e.g. M6 = 6×10⁻⁵).
-
-#   5. Why GOES for the final class, not SoLEXS counts?
-#        SoLEXS counts are in raw detector units (cts/s) and depend on
-#        aperture area, detector efficiency, and energy-to-channel mapping.
-#        Without applying the RMF+ARF, they cannot be converted to W/m².
-#        GOES XRS provides the calibrated, internationally standardised
-#        flux directly.
-# """)
-#     print("═" * 65 + "\n")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
 # MAIN
-# ─────────────────────────────────────────────────────────────────────────────
 def analyse(lc_file: str):
     lc_path = Path(lc_file)
     if not lc_path.exists():
@@ -613,22 +502,21 @@ def analyse(lc_file: str):
     print(f"{'═'*65}")
     print(f"  Input file : {lc_path.name}")
 
-    # 1. Parse filename
+
     obs_date, detector = parse_lc_filename(lc_path)
     print(f"  Date       : {obs_date.strftime('%Y-%m-%d')}")
     print(f"  Detector   : {detector}")
 
-    # 2. Read LC
     print("\n[1/5] Reading SoLEXS light curve …")
     lc_times, lc_counts, lc_ylabel = read_lc(lc_path)
     print(f"      {len(lc_times)} time bins  |  "
           f"range {lc_times[0].strftime('%H:%M')}–{lc_times[-1].strftime('%H:%M')} UTC")
 
-    # 3. Fetch GOES
+
     print("\n[2/5] Fetching GOES XRS data …")
     goes_ts, sat_num = fetch_goes_xrs(obs_date)
 
-    # 4. Detect flares
+
     print("\n[3/5] Detecting flares …")
     flares_thresh, threshold_val, bg = detect_flares_threshold(lc_times, lc_counts)
     flares_peaks,  prominence, _     = detect_flares_peaks(lc_times, lc_counts)
@@ -637,15 +525,13 @@ def analyse(lc_file: str):
     print(f"      Peak-finder      : {len(flares_peaks)} flare(s)  "
           f"[prominence = {prominence:.1f} cts/s]")
 
-    # 5. Classify with GOES
     print("\n[4/5] Classifying with GOES XRS …")
     flares_thresh, goes_long_col = classify_flares_with_goes(flares_thresh, goes_ts)
     flares_peaks,  _             = classify_flares_with_goes(flares_peaks,  goes_ts)
 
-    # 6. Print summary
+
     print_summary(flares_thresh, flares_peaks, detector, obs_date)
 
-    # 7. Plot
     print("[5/5] Generating plots …\n")
     plot_combined(
         lc_times, lc_counts, lc_ylabel,
@@ -662,8 +548,6 @@ def analyse(lc_file: str):
         threshold_val,
     )
 
-
-# ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Using Default file")
