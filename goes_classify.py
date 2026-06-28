@@ -264,7 +264,7 @@ def plot_combined(lc_times, lc_counts, lc_ylabel,
                   goes_ts, goes_long_col,
                   flares_thresh, flares_peaks,
                   obs_date, detector, sat_num,
-                  threshold_val, peaks_prominence):
+                  threshold_val, peaks_prominence, filename):
 
     #Single figure with 3 stacked panels:
       #Panel 1 – SoLEXS LC + threshold detections
@@ -346,16 +346,16 @@ def plot_combined(lc_times, lc_counts, lc_ylabel,
     ax3.set_xlabel("Time (UTC)", fontsize=8)
 
     plt.tight_layout(rect=[0, 0, 1, 0.98])
-    plt.savefig("plots/solexs_combined_plot.png", dpi=150, bbox_inches="tight")
+    plt.savefig(f"plots/{filename}_combined_plot.png", dpi=150, bbox_inches="tight")
     plt.show()
-    print("  Saved: solexs_combined_plot.png")
+    print(f"  Saved: plots/{filename}_combined_plot.png")
 
 
 def plot_separate(lc_times, lc_counts, lc_ylabel,
                   goes_ts, goes_long_col,
                   flares_thresh, flares_peaks,
                   obs_date, detector, sat_num,
-                  threshold_val):
+                  threshold_val, filename):
 
     goes_df = goes_ts.to_dataframe()
     if goes_df.index.tz is None:
@@ -459,9 +459,9 @@ def plot_separate(lc_times, lc_counts, lc_ylabel,
         axes[1, 1].text(0.5, 0.5, "No flares detected", ha="center", va="center")
 
     plt.tight_layout()
-    plt.savefig("plots/solexs_separate_plots.png", dpi=150, bbox_inches="tight")
+    plt.savefig(f"plots/{filename}_separate_plots.png", dpi=150, bbox_inches="tight")
     plt.show()
-    print("  Saved: solexs_separate_plots.png")
+    print(f"  Saved: plots/{filename}_separate_plots.png")
 
 
 def print_summary(flares_thresh, flares_peaks, detector, obs_date):
@@ -538,18 +538,18 @@ def analyse(lc_file: str):
         goes_ts, goes_long_col,
         flares_thresh, flares_peaks,
         obs_date, detector, sat_num,
-        threshold_val, prominence,
+        threshold_val, prominence, lc_path.name
     )
-    plot_separate(
-        lc_times, lc_counts, lc_ylabel,
-        goes_ts, goes_long_col,
-        flares_thresh, flares_peaks,
-        obs_date, detector, sat_num,
-        threshold_val,
-    )
+    # plot_separate(
+    #     lc_times, lc_counts, lc_ylabel,
+    #     goes_ts, goes_long_col,
+    #     flares_thresh, flares_peaks,
+    #     obs_date, detector, sat_num,
+    #     threshold_val, lc_file.name
+    # )
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Using Default file")
-        analyse(r"\data\lcfiles\AL1_SOLEXS_20240202_SDD2_L1.lc")
+        analyse(r"data\lcfiles\AL1_SOLEXS_20240203_SDD2_L1.lc")
     else: analyse(sys.argv[1])

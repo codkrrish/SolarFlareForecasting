@@ -3,6 +3,7 @@ import re
 
 directory = Path(r"data/lcfiles")
 
+#Dates in the name of files which you wish to delete.
 dates_to_delete = {
     "20240201","20240210","20240211","20240209","20240214","20240215",
     "20240216","20240217","20240218","20240221","20240222","20240223",
