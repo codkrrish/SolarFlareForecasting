@@ -2,9 +2,8 @@ import re
 import time
 import pandas as pd
 from pathlib import Path
-from datetime import datetime, timedelta
 from sunpy.net import Fido, attrs as a
-import pandas as pd
+
 
 
 # ── Configuration ─────────────────────────────────────────────────────────────
