@@ -35,7 +35,7 @@ from datetime import timezone, datetime
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 LC_DIR             = "data/lcfiles"
-HEK_CSV            = "data/hek_flares_dedup.csv"
+HEK_CSV            = "data/hek_flares.csv"
 OUTPUT_DIR         = Path("data/lc_flared_plots")
 FILES_PER_PAGE     = 4
 DPI                = 150
