@@ -8,8 +8,8 @@ from sunpy.net import Fido, attrs as a
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 LC_DIR      = "data/lcfiles"
-OUTPUT_CSV  = "data/hek_flares_dedup.csv"
-MIN_CLASS   = "B"       # minimum flare class to keep (A/B/C/M/X)
+OUTPUT_CSV  = "data/hek_flares"
+MIN_CLASS   = "A"       # minimum flare class to keep (A/B/C/M/X)
 RETRY_LIMIT = 3         # number of retries on network failure
 RETRY_WAIT  = 10        # seconds to wait between retries
 
@@ -60,10 +60,17 @@ def extract_dates_from_lc_files(lc_dir: str) -> list[str]:
 # STEP 2 — Fetch HEK FL events for one date (full 24-hour window)
 # ─────────────────────────────────────────────────────────────────────────────
 def hek_table_to_dataframe(hek_result) -> pd.DataFrame:
+    # Filter out columns with multi-dimensional structures (like 'refs')
+    try:
+        valid_cols = [name for name in hek_result.colnames if len(hek_result[name].shape) <= 1]
+        hek_result = hek_result[valid_cols]
+    except Exception:
+        pass
+
     # Tier 1: direct to_pandas (most SunPy versions)
     try:
         return hek_result.to_pandas()
-    except AttributeError:
+    except Exception:  # Catch all exceptions (ValueError, AttributeError, etc.)
         pass
 
     # Tier 2: wrap in astropy Table first
@@ -92,7 +99,8 @@ def fetch_one_date(date_str: str) -> pd.DataFrame | None:
         try:
             result = Fido.search(
                 a.Time(t_start, t_end),
-                a.hek.EventType("FL"),
+                a.hek.FL,
+                a.hek.FRM.Name == "SWPC"
             )
             hek_result = result["hek"]
 
@@ -147,8 +155,12 @@ def filter_dataframe(df: pd.DataFrame, min_class: str = "B") -> pd.DataFrame:
         df = df[df["flux_estimate_wm2"] >= floor_val]
 
     # Keep only GOES observatory detections
-    if "obs_observatory" in df.columns:
-        df = df[df["obs_observatory"].str.contains("GOES", case=False, na=False)]
+    # if "obs_observatory" in df.columns:
+    #     df = df[
+    #         df["obs_observatory"].str.contains("GOES", case=False, na=False) | 
+    #         df["obs_observatory"].isna() | 
+    #         (df["obs_observatory"] == "")
+    #     ]
 
     return df.reset_index(drop=True)
 
@@ -202,7 +214,7 @@ def main():
     if output_path.exists():
         existing = pd.read_csv(output_path, dtype=str)
         if "lc_date" in existing.columns:
-            already_done = set(existing["lc_date"].unique())
+            already_done = set(existing["lc_date"].astype(str).unique())
             existing_dfs.append(existing)
             print(f"\n  Resuming — {len(already_done)} dates already in CSV, "
                   f"skipping those.")
@@ -235,7 +247,7 @@ def main():
         df_filtered = filter_dataframe(df, MIN_CLASS)
         n_raw       = len(df)
         n_kept      = len(df_filtered)
-        print(f"{n_raw} events fetched → {n_kept} kept (≥{MIN_CLASS}-class, GOES only)")
+        print(f"{n_raw} events fetched")
 
         if not df_filtered.empty:
             new_dfs.append(df_filtered)
