@@ -8,7 +8,7 @@ from sunpy.net import Fido, attrs as a
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 LC_DIR      = "data/lcfiles"
-OUTPUT_CSV  = "data/hek_flares"
+OUTPUT_CSV  = "data/hek_flares.csv"
 MIN_CLASS   = "A"       # minimum flare class to keep (A/B/C/M/X)
 RETRY_LIMIT = 3         # number of retries on network failure
 RETRY_WAIT  = 10        # seconds to wait between retries
@@ -154,14 +154,6 @@ def filter_dataframe(df: pd.DataFrame, min_class: str = "B") -> pd.DataFrame:
         floor_val = CLASS_FLOOR.get(min_class.upper(), 0.0)
         df = df[df["flux_estimate_wm2"] >= floor_val]
 
-    # Keep only GOES observatory detections
-    # if "obs_observatory" in df.columns:
-    #     df = df[
-    #         df["obs_observatory"].str.contains("GOES", case=False, na=False) | 
-    #         df["obs_observatory"].isna() | 
-    #         (df["obs_observatory"] == "")
-    #     ]
-
     return df.reset_index(drop=True)
 
 
@@ -282,39 +274,7 @@ def main():
         print(f"  Failed dates saved → {failed_path}")
         print("  Re-run the script to retry failed dates automatically.\n")
 
-def dedup():
-    df = pd.read_csv("data/hek_flares.csv", dtype={"lc_date": str})
-    df["event_peaktime"] = pd.to_datetime(df["event_peaktime"], utc=True)
-    df["event_starttime"] = pd.to_datetime(df["event_starttime"], utc=True)
-    df["event_endtime"] = pd.to_datetime(df["event_endtime"], utc=True)
-
-# Sort by peak time
-    df = df.sort_values("event_peaktime").reset_index(drop=True)
-
-# Deduplicate: merge events whose peaks are within 5 minutes of each other
-# Keep the one with highest flux_estimate (most reliable class)
-    df["peak_group"] = (
-    df["event_peaktime"]
-    .diff()
-    .gt(pd.Timedelta("5min"))
-    .cumsum()
-)
-
-    deduped = (
-    df.sort_values("flux_estimate_wm2", ascending=False)
-      .groupby(["lc_date", "peak_group"], as_index=False)
-      .first()
-      .sort_values("event_peaktime")
-      .reset_index(drop=True)
-)
-    # Sort by event_starttime (earliest first) and save to CSV
-    deduped = deduped.sort_values("event_starttime").reset_index(drop=True)
-    deduped.to_csv("data/hek_flares_dedup.csv", index=False)
-    
-    print(f"Before dedup: {len(df)}  |  After: {len(deduped)}")
-
 
 if __name__ == "__main__":
     main()
-    #dedup()
     
