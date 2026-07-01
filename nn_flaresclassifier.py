@@ -19,7 +19,7 @@ SEQ_LENGTH = 12          # Past data lookback context window size
 HIDDEN_DIM = 64          # Number of units in GRU hidden layers
 NUM_LAYERS = 2           # Stacking depth of the GRU
 BATCH_SIZE = 64
-EPOCHS = 20               # Kept short for quick validation; scale up as needed
+EPOCHS = 50               # Kept short for quick validation; scale up as needed
 LR = 0.001
 SEED = 42
 
