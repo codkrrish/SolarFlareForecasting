@@ -14,12 +14,12 @@ from sklearn.metrics import classification_report, confusion_matrix
 DATA_PATH = r"data\out_builddata\windows_features.parquet"
 OUT_DIR = r"lastrun\nn_model_output"
 
-RUN_MODE = "binary"      # Options: "binary" (Flare vs No Flare) or "multiclass" (A/B/C/M/X)
+RUN_MODE = "multiclass"      # Options: "binary" (Flare vs No Flare) or "multiclass" (A/B/C/M/X)
 SEQ_LENGTH = 12          # Past data lookback context window size
 HIDDEN_DIM = 64          # Number of units in GRU hidden layers
-NUM_LAYERS = 2           # Stacking depth of the GRU
+NUM_LAYERS = 4           # Stacking depth of the GRU
 BATCH_SIZE = 64
-EPOCHS = 50               # Kept short for quick validation; scale up as needed
+EPOCHS = 20               # Kept short for quick validation; scale up as needed
 LR = 0.001
 SEED = 42
 

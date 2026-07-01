@@ -715,15 +715,4 @@ jupyter notebook train_flare_models.ipynb
 
 ---
 
-## License
-
-[Specify your license here]
-
-## Contact
-
-For questions or contributions, contact: [Your contact information]
-
----
-
-**Last updated:** July 2026  
-**Status:** Active development
+**Last updated:** 2 July 2026  
