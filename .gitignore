@@ -2,7 +2,10 @@
 /solex_pipeline.py
 /rev_rows.docx
 /for_readme.md
+/lsdw_detectorresults.md
 
 data/
 plots/
-__pychache__/
+__pycache__/
+recbin/
+lastrun/
