@@ -9,7 +9,7 @@ A comprehensive machine learning and statistical analysis framework for detectin
 3. [Project Structure](#project-structure)
 4. [Dependencies](#dependencies)
 5. [Data Processing Pipeline](#data-processing-pipeline)
-6. [Detection Methods and theri results](#detection-methods)
+6. [Detection Methods and their results](#detection-methods)
 7. [Visualization](#dynamic-visualization-and-web-ui-demo)
 8. [References & Terminology](#references--terminology)
 9. [Future work](#future-work)
