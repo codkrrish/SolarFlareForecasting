@@ -263,7 +263,7 @@ merge_gap_sec: 240.0
 - True Positives: **1672** | False Positives: **1300**
 - Precision: **56.3%** | Recall: **60.1%** | F1: **0.581**
 
-### Method 6: **Probabilistic Detector** (Bayesian LLR + Welch's Test)
+### Method 6: **Probabilistic Detector** (Bayesian LLR + Welch's Test `t-BLL_FlareDetector.py`)
 
 The detector operates as a **real-time-safe, causal, dual-signal probabilistic pipeline** designed to ingest raw FITS light-curve (`.lc`) data and identify solar flares without look-ahead bias.
 
@@ -273,7 +273,6 @@ The detector operates as a **real-time-safe, causal, dual-signal probabilistic p
 - **Dual-Signal Detection Engine:** Computes a running real-time posterior confidence score by blending a **One-Sided Welch's t-Test** (running foreground vs. iterative flare-frozen background window) with a **Bayesian Log-Likelihood-Ratio (LLR)** (evaluating foreground/background energy ratios parameterized against quiet sun and flare states).
 - **CUSUM Hysteresis Gate:** Instead of using rigid consecutive-run rules, an evidence-accumulating **CUSUM accumulator** logs logit-confidence deviations. Triggers switch states only when sustained statistical evidence clears the $h_{\text{enter}}$ and $h_{\text{exit}}$ thresholds, preventing flickering boundaries during noisy events.
 
----
 
 #### Performance Evaluation & High-Flux Results
 
@@ -292,7 +291,7 @@ Evaluated against official **HEK (Heliophysic Events Knowledgebase)** ground-tru
 
 This module implements a robust, rolling-window feature engineering and machine learning classification pipeline to predict solar flare events from raw light curve flux data. 
 
-#### 1. Window-Based Feature Engineering (`build_flare_dataset.py`)
+#### a. Window-Based Feature Engineering (`build_flare_dataset.py`)
 Rather than training directly on raw telemetry, the pipeline extracts structural, statistical, and contextual signatures from sliding window segments of the light curve:
 - **Statistical Descriptors:** Computes localized central tendency (`mean`, `median`), variance patterns (`std`, peak-to-peak `ptp`), and distribution shape traits (`skew`, `kurtosis`, percentiles `p25`, `p75`, `p90`).
 - **Signal Morphology:** Tracks dynamic trend characteristics across the window via localized linear `slope` calculations and directional sub-window energy shifts (`rise_delta`).
@@ -300,10 +299,9 @@ Rather than training directly on raw telemetry, the pipeline extracts structural
 - **Threshold Exceedance Metrics:** Quantifies the proportion of data points crossing high-confidence statistical boundaries (`frac_above_3sigma`, `frac_above_5sigma`).
 - **Cyclic Contextual Controls:** Embeds long-term solar cycle metrics (`ratio_local_to_longterm_bg`) and encodes cyclic time-of-day variations (`hour_sin`, `hour_cos`) to filter out instrumental artifacts or scheduled operational anomalies.
 
-#### 2. Machine Learning Classifier Architecture
-Using the extracted multi-dimensional feature matrix, a gradient-boosted classification architecture (such as LightGBM/XGBoost) or specialized ensemble model is trained to distinguish authentic flare sequences from baseline quiet sun fluctuations. The model outputs continuous probability estimates that are optimal for downstream real-time gating.
+#### b. Machine Learning Classifier Architecture (`train_flare_models.ipynb`)
+Using the extracted multi-dimensional feature matrix, a gradient-boosted classification architecture (such as RandomForestClassifier and HistGB) or specialized ensemble model is trained to distinguish authentic flare sequences from baseline quiet sun fluctuations. The model outputs continuous probability estimates that are optimal for downstream real-time gating.
 
----
 
 #### Evaluation & High-Energy Results
 
@@ -315,10 +313,6 @@ The classification pipeline was validated using a strict out-of-sample test spli
 - **High-Fidelity Significant Event Capture (M-Class):** **86.8%** ($46/53$) recall on high-impact, moderate solar flares.
 - **Smart Solar Noise Filtering:** Low-amplitude background fluctuations (B-class at 7.0% and C-class at 32.9% recall) are systematically attenuated by design. This intentional suppression filters out minor solar jitter to preserve the framework’s exceptional 97.8% core precision line.
 
-
-### Method 8: A simple Neural Network Classifier (`nn_flareclassifier.py`)
-
-**Architecture:** Multi-layer neural network trained for **30 epochs**
 
 ### Method 8: Simple Neural Network Classifier (`nn_flareclassifier.py`)
 
