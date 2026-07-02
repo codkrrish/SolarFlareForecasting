@@ -9,12 +9,10 @@ A comprehensive machine learning and statistical analysis framework for detectin
 3. [Project Structure](#project-structure)
 4. [Dependencies](#dependencies)
 5. [Data Processing Pipeline](#data-processing-pipeline)
-6. [Detection Methods](#detection-methods)
-7. [Classification System](#classification-system)
-8. [Results](#results)
-9. [Getting Started](#getting-started)
-10. [Usage Guide](#usage-guide)
-11. [Model Performance](#model-performance)
+6. [Detection Methods and theri results](#detection-methods)
+7. [Visualization](#dynamic-visualization-and-web-ui-demo)
+8. [References & Terminology](#references--terminology)
+9. [Future work](#future-work)
 
 ---
 
@@ -369,7 +367,6 @@ The frontend interface and interactive visualization dashboard for this project 
 
 ## Future Work
 
-- [ ] Ensemble voting from multiple detectors
 - [ ] Flare forecasting (predict tomorrow's events using yesterday's data)
 - [ ] Spectral hardness ratio analysis
 - [ ] Automated pipeline with real-time alerts
