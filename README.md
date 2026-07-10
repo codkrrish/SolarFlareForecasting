@@ -1,372 +1,943 @@
-# Solar Flare Forecasting
+<div align="center">
 
-A comprehensive machine learning and statistical analysis framework for detecting and classifying solar flares using X-ray light curve data from the SoLEXS instrument and GOES satellite observations.
+# 🌞 Solar Flare Detection & Forecasting
 
-## Table of Contents
+### **Real-Time Solar Flare Detection and Classification using Statistical Signal Processing and Machine Learning**
 
-1. [Overview](#overview)
-2. [Key Features](#key-features)
-3. [Project Structure](#project-structure)
-4. [Dependencies](#dependencies)
-5. [Data Processing Pipeline](#data-processing-pipeline)
-6. [Detection Methods and their results](#detection-methods)
-7. [Visualization](#dynamic-visualization-and-web-ui-demo)
-8. [References & Terminology](#references--terminology)
-9. [Future work](#future-work)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-Deep%20Learning-FF6F00?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success)]()
 
----
 
-## Overview
 
-This project implements multiple machine learning and statistical methods to detect solar flares in X-ray light curve (LC) data and classify them according to the official GOES (Geostationary Operational Environmental Satellite) classification system. The framework combines:
+### **A comprehensive framework for real-time solar flare detection and standardized GOES classification using X-ray light curve observations from SoLEXS onboard ISRO's Aditya-L1 mission.**
 
-- **Statistical detectors** (Dual-window, CUSUM, and Wavelet-based methods)
-- **Probabilistic models** (Bayesian likelihood ratio with Welch's t-test)
-- **Machine learning classifiers** (Neural Networks, Random Forest, Gradient Boosting)
-
-The project uses SoLEXS light curve data from the ISRO ISSDC Pradan website and cross-references detections with GOES-18 XRS flux measurements for official classification.
+</div>
 
 ---
 
-## Key Features
+# 📑 Table of Contents
 
-- **Multi-method flare detection** — Three independent statistical approaches with complementary strengths  
-- **Real-time compatible** — Causal algorithms suitable for deployment  
-- **Ground truth integration** — HEK (Heliophysics Event Knowledgebase) flare matching and validation  
-- **GOES classification** — Similar to Official X-ray flux-based flare categorization (A, B, C, M, X classes)  
-- **Per-class performance analysis** — Separate metrics for each flare magnitude  
-- **Interactive visualization** — Light curve plots with detected flares and classifications  
+- 🌍 Why This Project?
+- ✨ Key Features
+- 🔄 Current Pipeline
+- 🛠️ Technology Stack
+- 📂 Repository Structure
+- 📊 Dataset
+- 🚀 Getting Started
+- 📡 Statistical Detection Methods
+- 🧠 Machine Learning Models
+- 🛰️ GOES Classification
+- 📈 Results & Evaluation
+- 💻 Usage
+- 🗺️ Future Work
+- 🤝 Contributing
+- 📜 References
+- 📄 License
 
 ---
 
-## Project Structure
+# 🌍 Why This Project?
 
+Solar flares are sudden bursts of electromagnetic radiation released due to magnetic reconnection on the Sun. These events are among the most energetic phenomena in our solar system and can significantly affect modern technological infrastructure.
+
+Solar flares can
+
+- 🛰️ Disrupt satellite operations
+- 📡 Affect GPS and radio communication
+- ⚡ Trigger geomagnetic storms
+- ✈️ Increase radiation exposure during high-altitude flights
+- 👨‍🚀 Endanger astronauts and spacecraft electronics
+
+Reliable and automated flare detection is therefore essential for space weather forecasting and early warning systems.
+
+This project develops a complete end-to-end framework for detecting solar flares from **SoLEXS X-ray Light Curve (LC)** observations and assigning standardized **GOES flare classes** using multiple statistical methods and machine learning models.
+
+---
+
+# ✨ Key Features
+
+- ✅ Real-time compatible statistical detection
+- ✅ Multiple independent flare detectors
+- ✅ Bayesian probabilistic detection framework (Work in Progress)
+- ✅ Random Forest classifier
+- ✅ HistGradientBoosting classifier
+- ✅ Neural Network classifier
+- ✅ HEK ground-truth validation
+- ✅ GOES XRS standardized flare classification
+- ✅ Detection latency evaluation
+- ✅ Precision, Recall and F1-score analysis
+- ✅ Interactive visualization tools
+- ✅ Modular and extensible pipeline
+
+---
+
+# 🔄 Current Pipeline
+
+> **Current research workflow (not the final deployment architecture)**
+
+```text
+SoLEXS Light Curve (.lc)
+            │
+            ▼
+    Data Cleaning
+            │
+            ▼
+ Statistical Detection
+(Welch's t-test + Bayesian LLR)
+            │
+            ▼
+ Feature Extraction
+            │
+            ▼
+ Random Forest Classifier
+            │
+            ▼
+ GOES Class Assignment
+            │
+            ▼
+ Visualization & Evaluation
 ```
+
+---
+
+# 🛠️ Technology Stack
+
+| Category | Technologies |
+|----------|--------------|
+| Programming | Python |
+| Data Processing | NumPy • Pandas |
+| Scientific Computing | SciPy |
+| Visualization | Matplotlib |
+| FITS Processing | Astropy |
+| Solar Physics | SunPy |
+| Machine Learning | Scikit-Learn |
+| Deep Learning | TensorFlow / Keras |
+| Statistical Detection | Welch's t-test • CUSUM • Stationary Wavelet Transform |
+| Probabilistic Methods | Bayesian Log-Likelihood Ratio |
+| ML Models | Random Forest • HistGradientBoosting • Neural Network |
+| Dataset | SoLEXS (Aditya-L1), HEK, GOES XRS |
+| Version Control | Git • GitHub |
+
+---
+
+## ⚙️ Technologies Used
+
+<p align="center">
+
+<img src="https://skillicons.dev/icons?i=python,tensorflow,sklearn,git,github"/>
+
+</p>
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white"/>
+<img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white"/>
+<img src="https://img.shields.io/badge/SciPy-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white"/>
+<img src="https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Astropy-FF6600?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/SunPy-F9A602?style=for-the-badge"/>
+
+</p>
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Random%20Forest-228B22?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/HistGradientBoosting-1E88E5?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Neural%20Network-8E44AD?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/CUSUM-E91E63?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Welch's%20t--Test-009688?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Bayesian%20LLR-FF5722?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Stationary%20Wavelet%20Transform-3F51B5?style=for-the-badge"/>
+
+</p>
+
+---
+## 📂 Repository Structure
+
+```text
 SolarFlareForecasting/
-├── data/                      #Data directory
-│   ├── lc_files/                  #SoLEXS light curve FITS files (input)
-│   ├── pi_files/                  #SoLEXS PI (Pulse Invariant) FITS files (optional)
-│   └── hek_flares.csv             #Ground truth flare annotations (HEK)
+│# Data Processing
+├── unzip_solex.py
+├── clean_lcfiles.py
+├── vis_lc.py
+├── vis_pi.py
+└── solexs_flare_analysis.py
 │
-│                              #Data Processing Scripts
-├── unzip_solex.py                  #Extract .lc and .pi files from ISRO downloads
-├── clean_lcfiles.py                #Remove problematic light curve files by date
-├── vis_lc.py                       #Visualize individual .lc FITS files
-├── vis_pi.py                       #Visualize individual .pi FITS files
-├── solexs_flare_analysis.py        #Statistical analysis of light curves
+├#Data Preparation
+├── build_flare_dataset.py
+├── getFlares_data.py
+└── goes_classify.py
 │
-│                             #Data Extraction & Preparation
-├── build_flare_dataset.py          #Extract features and build training dataset
-├── getFlares_data.py               #Fetch HEK flare annotations for matching dates
-├── goes_classify.py                #Classify detected flares using GOES XRS data
+├# Machine Learning
+├── train_flare_models.ipynb
+├── t-BLL_FlareDetector.py
+└── nn_flareclassifier.py
 │
-│                              #Detection Models
-├── nn_flareclassifier.py           #Neural Network flare detector (30 epochs)
-├── rfc.ipynb                       #Random Forest Classifier (interactive notebook)
-├── train_flare_models.ipynb        #RandomForest + HistGradientBoosting training
+├# Visualization
+└── lc_flared.py
 │
-├──plots/                     #Output plots and analysis charts
-├──lc_flared.py               #Plot light curves with detected flares overlay      
+├─images/
 │
-└── README.md                  #This file
+└── README.md
 ```
 
 ---
 
-## Dependencies
+# 📊 Dataset
 
-Install the required packages:
+This framework integrates multiple publicly available datasets to perform robust solar flare detection and classification.
+
+## ☀️ 1. SoLEXS (Aditya-L1)
+
+The primary dataset consists of X-ray Light Curve (LC) observations collected by the **Solar Low Energy X-ray Spectrometer (SoLEXS)** onboard **ISRO's Aditya-L1 mission**.
+
+Used files:
+
+- `.lc` Light Curve FITS
+- `.pi` Pulse Invariant FITS
+
+These provide the raw X-ray photon counts used throughout the pipeline.
+
+---
+
+## 🌞 2. HEK (Heliophysics Event Knowledgebase)
+
+HEK is used **only as ground truth** for evaluation.
+
+Information extracted:
+
+- Event ID
+- Start Time
+- Peak Time
+- End Time
+- GOES Class
+
+This allows automated matching between detected events and officially recorded solar flares.
+
+---
+
+## 🛰️ 3. GOES XRS
+
+GOES X-Ray Sensor observations are used **only after flare detection** to assign the official flare class.
+
+Classes include
+
+| Class | Flux Range |
+|---------|----------------|
+| A | <10⁻⁷ W/m² |
+| B | 10⁻⁷ – 10⁻⁶ |
+| C | 10⁻⁶ – 10⁻⁵ |
+| M | 10⁻⁵ – 10⁻⁴ |
+| X | >10⁻⁴ |
+
+---
+
+# 🚀 Getting Started
+
+## Requirements
+
+- Python 3.10+
+- Git
+
+Install dependencies
 
 ```bash
 pip install numpy pandas scipy matplotlib scikit-learn
 pip install astropy sunpy sunpy[net]
-pip install torch torchvision torchaudio  # For neural network models
+pip install tensorflow
 ```
-
-**Core Libraries:**
-- **NumPy / Pandas** — Data manipulation and analysis
-- **SciPy** — Signal processing (find_peaks, Welch's method, CUSUM, wavelets)
-- **Scikit-learn** — Machine learning classifiers (Random Forest, Gradient Boosting)
-- **PyTorch** — Neural network implementation
-- **Astropy** — FITS file handling
-- **SunPy** — Solar data access (GOES XRS data download via Fido)
-- **Matplotlib** — Visualization
 
 ---
 
-## Data Processing Pipeline
-
-### 1. **Data Acquisition & Extraction** (`unzip_solex.py`)
+## Clone Repository
 
 ```bash
-python unzip_solex.py <source_dir> <target_dir>
+git clone https://github.com/<username>/SolarFlareForecasting.git
+
+cd SolarFlareForecasting
 ```
 
-- Downloads ISRO ISSDC Pradan SoLEXS light curve files (zipped)
-- Extracts `.lc` (light curve) and `.pi` (pulse invariant) FITS files
-- **Filters:** Only saves files with non-empty GTI (Good Time Interval) extensions
-- Populates `lc_files/` directory for further processing
+Replace with your actual repository link.
 
-### 2. **Data Cleaning** (`clean_lcfiles.py`)
+---
 
-Removes problematic light curve files identified through manual review:
-```bash
-python clean_lcfiles.py --dates [YYYY-MM-DD, ...]
-```
-
-- Deletes corrupted or unreliable data files
-- Prepares clean dataset for analysis
-
-### 3. **Visualization & Inspection** (`vis_lc.py`, `vis_pi.py`)
+## Prepare Dataset
 
 ```bash
-python vis_lc.py <lc_file>
-python vis_pi.py <pi_file>
+mkdir lc_files
+mkdir pi_files
+mkdir data
 ```
 
-- Plots raw X-ray light curves from SoLEXS
-- Visualizes pulse invariant spectra
-- Helps identify data quality issues and flare signatures
+Extract downloaded SoLEXS files
 
-### 4. **Ground Truth Acquisition** (`getFlares_data.py`)
+```bash
+python unzip_solex.py <download_folder> lc_files/
+```
+
+---
+
+## Download Ground Truth
 
 ```bash
 python getFlares_data.py
 ```
 
-- Fetches HEK (Heliophysics Event Knowledgebase) flare annotations
-- Selects dates matching available light curve files
-- Outputs `hek_flares.csv` with:
-  - Event ID, start time, peak time, end time
-  - GOES SWPC class designation (A, B, C, M, X)
+This generates
 
-### 5. **Feature Engineering** (`build_flare_dataset.py`)
+```
+data/hek_flares.csv
+```
+
+---
+
+## Build Dataset
 
 ```bash
 python build_flare_dataset.py
 ```
 
-Extracts statistical, morphological, background-relative, and temporal features from sliding window segments of light curve data:
+Outputs
 
-Extracted Features:
+```
+train_features.csv
 
-**Metadata & Temporal Bounds**: `window_start_time`, `window_end_time`, `segment_id`, `source_file` (causally tracks the last file touched)
+validation_features.csv
 
-**Basic Statistics**: Count validity (`n_valid`, `frac_valid`), central tendency (`mean`, `median`), dispersion (`std`, `min`, `max`, `ptp` [peak-to-peak]), and distribution shape percentiles (`p25`, `p75`, `p90`, `skew`, `kurtosis`)
-
-**Signal Dynamics & Morphology**: Linear trend over the window (`slope`) and sub-window delta shifts (`rise_delta`)
-
-**Background-Relative Tracking**: Causal background noise baselines (`bg_median_at_end`, `bg_mad_std_at_end`), signal excesses over baseline (`mean_excess`, `max_sigma_excess`), and signal-to-background ratios (`mean_ratio_to_bg`, `max_ratio_to_bg`)
-
-**Threshold Exceedance**: Proportion of data points crossing critical statistical significance levels (`frac_above_3sigma`, `frac_above_5sigma`)
-
-**Contextual & Cyclic Features**: Long-term solar activity scaling (`ratio_local_to_longterm_bg`) and cyclic time-of-day encoding (`hour_sin`, `hour_cos`) to control for potential instrumental or scheduling artifacts
-
-Output: Training/validation datasets with binary labels (flare/no-flare) and GOES class labels.
+test_features.csv
+```
 
 ---
 
-# Detection Methods
+## Train Models
 
-### Method 1: **Threshold-Based Detection**
+Random Forest & Gradient Boosting
 
-A simple baseline method that flags continuous intervals where:
-- **Condition:** `counts > background + 5σ` AND duration `≥ 60 s`
-- **Rationale:** 5σ cut gives ~1-in-3.5 million false positive rate per sample
-- **Strength:** Fast, interpretable
-- **Weakness:** Misses overlapping flares
-
-### Method 2: **SciPy find_peaks (Prominence)**
-
-Uses scipy's `find_peaks` with prominence metric:
-- **Condition:** Peak prominence `≥ 5σ` AND minimum width `≥ 60 s`
-- **Advantage:** Better separation of overlapping peaks in complex active regions
-- **Implementation:** Stateless, easier for batch processing
-
-### Method 3: **Dual-Window Detector** (Frozen Baseline)
-
-Advanced statistical method combining two rolling windows:
-
-1. **Short window (2–3 min):** Fast-moving foreground signal
-2. **Long window (120–180 min):** Slow baseline
-3. **Normalization:** Subtract baseline from foreground, divide by baseline std
-4. **Frozen baseline:** Once a flare is suspected, baseline stops updating (prevents flare counts from poisoning the baseline estimate)
-5. **Output:** z-score time series; alarm when `z > threshold` for `≥ persist_s` seconds
-
-**Best Parameters (from grid search):**
-```
-long_window_min: 120.0
-short_window_min: 3.0
-freeze_threshold: 1.5
-unfreeze_grace_sec: 120.0
-signal_threshold: 1.5
-min_duration_sec: 30.0
-merge_gap_sec: 240.0
+```bash
+jupyter notebook train_flare_models.ipynb
 ```
 
-**Performance (on 2783 GT flares):**
-- True Positives: **1625** | False Positives: **756**
-- Precision: **68.3%** | Recall: **58.4%** | F1: **0.627**
+Neural Network
 
-### Method 4: **CUSUM (Cumulative Sum Control Chart)**
-
-Accumulates evidence over time instead of checking single z-scores:
-
-1. **Running total:** `g_pos` accumulates small consistent rises
-2. **Resets:** When alarm triggers or no excess detected
-3. **Advantage:** Naturally sensitive to slow gradual flares (small sustained excess over many minutes)
-4. **Frozen baseline:** Uses same baseline-freezing strategy as dual-window
-5. **Entry/Exit:** Fires when `g_pos ≥ decision_h`
-
-**Best Parameters (from grid search):**
+```bash
+python nn_flareclassifier.py
 ```
-long_window_min: 120.0
-short_smooth_sec: 10.0
-freeze_z: 1.2
-unfreeze_grace_sec: 60.0
-drift_k: 0.75
-decision_h: 15.0
-min_duration_sec: 60.0
-merge_gap_sec: 240.0
-```
-
-**Performance (on 2783 GT flares):**
-- True Positives: **1722** | False Positives: **1424**
-- Precision: **54.7%** | Recall: **61.9%** | F1: **0.581**
-
-### Method 5: **Wavelet Detector** (Stationary Wavelet Transform)
-
-Decomposes count rate into multiple time-scales simultaneously:
-
-1. **SWT decomposition:** db4 wavelet, 6 levels
-2. **Multi-scale detection:** Each wavelet scale captures different flare speeds
-   - Fine scales: Fast impulsive flares
-   - Coarse scales: Slow gradual flares
-3. **Detection statistic:** Maximum z-score across selected scales
-4. **Advantage:** Single threshold works for both impulsive and gradual flares
-5. **Frozen baseline:** Applies to each wavelet scale independently
-
-**Best Parameters (from grid search):**
-```
-wavelet: 'db4'
-swt_levels: 6
-use_levels: [3, 4, 5, 6]
-long_window_min: 180.0
-freeze_z: 1.5
-unfreeze_grace_sec: 120.0
-signal_threshold: 3.0
-min_duration_sec: 60.0
-merge_gap_sec: 240.0
-```
-
-**Performance (on 2783 GT flares):**
-- True Positives: **1672** | False Positives: **1300**
-- Precision: **56.3%** | Recall: **60.1%** | F1: **0.581**
-
-### Method 6: **Probabilistic Detector** (Bayesian LLR + Welch's Test `t-BLL_FlareDetector.py`)
-
-The detector operates as a **real-time-safe, causal, dual-signal probabilistic pipeline** designed to ingest raw FITS light-curve (`.lc`) data and identify solar flares without look-ahead bias.
-
-#### Core Processing Steps
-
-- **Data Ingestion & Preprocessing:** Maps timestamps to POSIX seconds and applies causal linear interpolation to seamlessly patch short telemetry gaps ($\le 5\text{s}$).
-- **Dual-Signal Detection Engine:** Computes a running real-time posterior confidence score by blending a **One-Sided Welch's t-Test** (running foreground vs. iterative flare-frozen background window) with a **Bayesian Log-Likelihood-Ratio (LLR)** (evaluating foreground/background energy ratios parameterized against quiet sun and flare states).
-- **CUSUM Hysteresis Gate:** Instead of using rigid consecutive-run rules, an evidence-accumulating **CUSUM accumulator** logs logit-confidence deviations. Triggers switch states only when sustained statistical evidence clears the $h_{\text{enter}}$ and $h_{\text{exit}}$ thresholds, preventing flickering boundaries during noisy events.
-
-
-#### Performance Evaluation & High-Flux Results
-
-Evaluated against official **HEK (Heliophysic Events Knowledgebase)** ground-truth annotations using a strict chronological test split (final 20% of data) and a tight $\pm 60\text{s}$ matching window.
-
-##### Key Performance Strengths
-- **High Precision:** **97.8%** ($222 / 227$). Out of all alarms raised across the entire test set, only 5 were false alerts.
-- **Severe Event Capture (X-Class):** **100.0%** ($5/5$) recall on all mission-critical, maximum-severity solar flares.
-- **Significant Event Capture (M-Class):** **86.8%** ($46/53$) recall on moderate space weather events.
-- **Micro-Flare Suppression:** Micro-flares (B-class at 7.0% and C-class at 32.9%) are intentionally filtered down by the statistical baseline adjustments to maintain the system's exceptional 97.8% operational precision against background solar noise.
-
-**Design Principle:**
-> The innovation here is explicitly characterizing quiet-time behavior alongside flare behavior. Naive approaches (z-score only) characterize flares but never baseline statistics—this leads to instability when baseline changes. The LLR solves this by fitting both. For complementing the probabilistic detection method we used a random forest classifer trained on the dataset created using the `build_flare_dataset.py`.
-
-### Method 7: **Light Curve Feature Extraction & Flare Classification Pipeline**
-
-This module implements a robust, rolling-window feature engineering and machine learning classification pipeline to predict solar flare events from raw light curve flux data. 
-
-#### a. Window-Based Feature Engineering (`build_flare_dataset.py`)
-Rather than training directly on raw telemetry, the pipeline extracts structural, statistical, and contextual signatures from sliding window segments of the light curve:
-- **Statistical Descriptors:** Computes localized central tendency (`mean`, `median`), variance patterns (`std`, peak-to-peak `ptp`), and distribution shape traits (`skew`, `kurtosis`, percentiles `p25`, `p75`, `p90`).
-- **Signal Morphology:** Tracks dynamic trend characteristics across the window via localized linear `slope` calculations and directional sub-window energy shifts (`rise_delta`).
-- **Causal Background Calibration:** Compares current foreground windows against running background noise floors (`bg_median_at_end`, `bg_mad_std_at_end`) and isolates signal excesses (`mean_excess`, `max_sigma_excess`) along with signal-to-background scaling ratios.
-- **Threshold Exceedance Metrics:** Quantifies the proportion of data points crossing high-confidence statistical boundaries (`frac_above_3sigma`, `frac_above_5sigma`).
-- **Cyclic Contextual Controls:** Embeds long-term solar cycle metrics (`ratio_local_to_longterm_bg`) and encodes cyclic time-of-day variations (`hour_sin`, `hour_cos`) to filter out instrumental artifacts or scheduled operational anomalies.
-
-#### b. Machine Learning Classifier Architecture (`train_flare_models.ipynb`)
-Using the extracted multi-dimensional feature matrix, a gradient-boosted classification architecture (such as RandomForestClassifier and HistGB) or specialized ensemble model is trained to distinguish authentic flare sequences from baseline quiet sun fluctuations. The model outputs continuous probability estimates that are optimal for downstream real-time gating.
-
-
-#### Evaluation & High-Energy Results
-
-The classification pipeline was validated using a strict out-of-sample test split, evaluating its ability to identify verified solar flares while suppressing background noise.
-
-#### Key Performance Strengths
-- **Exceptional Operational Precision:** **97.8%** ($222 / 227$). Out of all affirmative alarms triggered across the entire evaluation sequence, only 5 represented false positives, minimizing costly system downtime or downstream workflow interruptions.
-- **Flawless Severe Event Sensitivity (X-Class):** **100.0%** ($5/5$) recall. The model successfully intercepted every single mission-critical, maximum-severity space weather event with zero misses.
-- **High-Fidelity Significant Event Capture (M-Class):** **86.8%** ($46/53$) recall on high-impact, moderate solar flares.
-- **Smart Solar Noise Filtering:** Low-amplitude background fluctuations (B-class at 7.0% and C-class at 32.9% recall) are systematically attenuated by design. This intentional suppression filters out minor solar jitter to preserve the framework’s exceptional 97.8% core precision line.
-
-
-### Method 8: Simple Neural Network Classifier (`nn_flareclassifier.py`)
-
-Multi-layer neural network trained for **30 epochs**.
-
-#### Performance Summary
-
-| Metric | Train (No Flare / Flare) | Test (No Flare / Flare) |
-| :--- | :--- | :--- |
-| **Precision** | 0.9842 / 0.6312 | 0.9509 / 0.4119 |
-| **Recall** | 0.8439 / 0.5926 | 0.9391 / 0.7199 |
-| **F1-score** | 0.9096 / 0.6113 | 0.9450 / 0.5240 |
-| **Accuracy** | **85.70%** | **82.79%** |
-
-
-**Interpretation:**
-- Excellent "No Flare" classification (precision ≈ 95%, recall ≈ 94%)
-- "Flare" class more challenging: high recall (72%) but lower precision (41%)
-- Trade-off reflects imbalanced detection problem where **missing a flare is costlier than false alarms**
-- Suitable for screening applications where sensitivity is prioritized
-
-
----
-## Dynamic visualization and Web UI Demo
-
-The frontend interface and interactive visualization dashboard for this project were developed by my teammate. You can explore the user interface, dashboard components, and frontend implementation here:
-
-**[Frontend Visualization](https://github.com/RamK2006/SolarFlareForecasting-main)**
 
 ---
 
-## References & Terminology
+## Run Detection
 
-- **HEK:** Heliophysics Event Knowledgebase — ground truth solar flare catalog
-- **GOES XRS:** Geostationary Operational Environmental Satellite X-Ray Sensor (1–8 Å channel)
-- **GOES SWPC:** Data collected by NOAA's GOES (Geostationary Operational Environmental Satellite) series. It is processed by th Space Weather Prediction Center (SWPC) to monitor solar activity include flares.
-- **SoLEXS:** Soft Lunar X-ray Spectrometer on Chandrayaan-2 Orbiter
-- **GTI:** Good Time Interval — periods of valid instrument operation
-- **RMF/ARF:** Calibration matrices (Response Matrix File / Ancillary Response File)
-- **LLR:** Log-Likelihood Ratio — Bayesian evidence metric
-- **SWT:** Stationary Wavelet Transform — multi-scale decomposition
-- **CUSUM:** Cumulative Sum Control Chart — sequential change detection
-- **F1-score:** Harmonic mean of precision and recall
+```bash
+python goes_classify.py lc_files/sample.lc
+```
 
----
+Outputs
 
-## Future Work
-
-- [ ] Flare forecasting (predict tomorrow's events using yesterday's data)
-- [ ] Spectral hardness ratio analysis
-- [ ] Automated pipeline with real-time alerts
-- [ ] Compare against official GOES event lists
-- [ ] Deploy probabilistic detector in production environment
+- GOES Class
+- Detection plots
+- CSV report
 
 ---
 
-**Last updated:** 2 July 2026  
+# 📡 Statistical Detection Methods
+
+The framework implements multiple statistical detectors. Each detector has different strengths and complements the others.
+
+---
+
+## 1️⃣ Threshold Detector
+
+A simple baseline approach.
+
+**Rule**
+
+```
+counts > background + 5σ
+```
+
+for at least
+
+```
+60 seconds
+```
+
+### Advantages
+
+- Extremely fast
+- Easy to interpret
+
+### Limitation
+
+Sensitive to background variation.
+
+---
+
+## 2️⃣ Peak Detection (SciPy)
+
+Uses
+
+```
+scipy.signal.find_peaks()
+```
+
+Conditions
+
+- Prominence ≥ 5σ
+- Minimum width ≥ 60 s
+
+Suitable for separating nearby flare peaks.
+
+---
+
+## 3️⃣ Dual Window Detector
+
+Maintains
+
+- Short foreground window
+- Long background window
+
+When flare activity begins,
+
+the background estimate is frozen,
+
+preventing contamination.
+
+Performance
+
+| Metric | Value |
+|---------|------|
+| Precision | **68.3%** |
+| Recall | 58.4% |
+| F1 | **0.627** |
+
+---
+
+## 4️⃣ CUSUM Detector
+
+Detects gradual changes by accumulating small increases over time.
+
+Best suited for
+
+- Weak flares
+- Slowly rising events
+
+Performance
+
+| Metric | Value |
+|---------|------|
+| Precision | 54.7% |
+| Recall | **61.9%** |
+| F1 | 0.581 |
+
+# 📡 Advanced Statistical Detection Methods
+
+## 5️⃣ Wavelet Detector (Stationary Wavelet Transform)
+
+Instead of observing the signal at only one scale, the framework decomposes the light curve into multiple frequency bands using the **Stationary Wavelet Transform (SWT)**.
+
+### Methodology
+
+- Wavelet: **Daubechies-4 (db4)**
+- SWT Levels: **6**
+- Detection Levels: **3–6**
+- Frozen baseline strategy
+- Multi-scale z-score computation
+
+### Why Wavelets?
+
+Different solar flares evolve differently.
+
+- Fine scales capture **impulsive flares**
+- Coarse scales capture **slow gradual flares**
+
+This enables detection of a wider variety of flare morphologies using a single statistical framework.
+
+### Best Parameters
+
+| Parameter | Value |
+|-----------|-------|
+| Wavelet | db4 |
+| Levels | 6 |
+| Detection Levels | 3,4,5,6 |
+| Background Window | 180 min |
+| Freeze Threshold | 1.5 |
+| Signal Threshold | 3 |
+| Minimum Duration | 60 s |
+
+### Performance
+
+| Metric | Value |
+|---------|------|
+| True Positives | 1672 |
+| False Positives | 1300 |
+| Precision | **56.3%** |
+| Recall | **60.1%** |
+| F1 Score | **0.581** |
+
+---
+
+## 6️⃣ Probabilistic Detector (Welch's t-test + Bayesian LLR)
+
+This is the primary research direction of the project and the proposed detector for deployment.
+
+Unlike traditional threshold-based methods, it combines statistical hypothesis testing with probabilistic inference.
+
+### Stage 1 — Welch's t-test
+
+A foreground window is continuously compared against the background window.
+
+The detector evaluates whether the current signal differs significantly from the historical background.
+
+Features:
+
+- Frozen background estimation
+- Robust against changing baselines
+- No future information required
+- Suitable for streaming data
+
+---
+
+### Stage 2 — Bayesian Log-Likelihood Ratio (LLR)
+
+The Bayesian model learns the distributions of
+
+- Quiet solar activity
+- Flare activity
+
+It computes the probability that the current signal belongs to either class.
+
+Instead of relying only on z-scores,
+
+it estimates
+
+```
+P(Flare | Observation)
+```
+
+using Bayesian inference.
+
+---
+
+### Decision Logic
+
+The detector combines
+
+- Welch's t-test
+- Bayesian confidence
+
+to produce a final flare probability.
+
+```
+Light Curve
+      │
+      ▼
+Foreground vs Background
+      │
+      ▼
+Welch's t-test
+      │
+      ▼
+Bayesian Log-Likelihood Ratio
+      │
+      ▼
+Posterior Probability
+      │
+      ▼
+Flare / Quiet Decision
+```
+
+### Advantages
+
+✅ Real-time compatible
+
+✅ Causal (no future samples)
+
+✅ Robust to background drift
+
+✅ Lower false alarms
+
+✅ Probabilistic confidence score
+
+---
+
+# 🧠 Machine Learning Models
+
+After candidate flare intervals are detected,
+
+hand-crafted features are extracted and passed to machine learning models for final prediction.
+
+---
+
+## 🌳 Random Forest Classifier
+
+The primary classical machine learning model.
+
+### Characteristics
+
+- Ensemble of Decision Trees
+- Bootstrap aggregation
+- Feature importance estimation
+- Robust against noisy features
+- Handles nonlinear relationships
+
+### Why Random Forest?
+
+- Highly interpretable
+- Strong baseline performance
+- Minimal preprocessing
+- Resistant to overfitting
+
+---
+
+## 🚀 HistGradientBoosting Classifier
+
+Histogram-based Gradient Boosting optimized for large datasets.
+
+### Advantages
+
+- Faster than traditional Gradient Boosting
+- Lower memory usage
+- Excellent nonlinear modeling
+- High scalability
+
+---
+
+## 🧠 Neural Network
+
+A Multi-Layer Perceptron (MLP) is implemented for high-recall flare detection.
+
+### Architecture
+
+```
+Input Features
+      │
+      ▼
+Dense (128) + ReLU
+      │
+Dropout (0.3)
+      │
+      ▼
+Dense (64) + ReLU
+      │
+Dropout (0.3)
+      │
+      ▼
+Dense (32) + ReLU
+      │
+Dropout (0.2)
+      │
+      ▼
+Sigmoid Output
+```
+
+Training
+
+- Epochs: 30
+- Optimizer: Adam
+- Binary Cross Entropy Loss
+
+The neural network emphasizes **high recall**, making it useful as a screening model where missing a flare is more costly than generating additional false positives.
+
+---
+
+# 🛰️ GOES Classification
+
+Once a flare has been detected,
+
+its official classification is assigned using **GOES X-Ray Sensor (XRS)** observations.
+
+Classification follows the internationally accepted GOES standard.
+
+| Class | Peak Flux |
+|---------|----------------|
+| A | < 10⁻⁷ W/m² |
+| B | 10⁻⁷ – 10⁻⁶ |
+| C | 10⁻⁶ – 10⁻⁵ |
+| M | 10⁻⁵ – 10⁻⁴ |
+| X | > 10⁻⁴ |
+
+Example
+
+```
+Flux = 6.5 × 10⁻⁵
+
+↓
+
+GOES Class = M6.5
+```
+
+The GOES class is attached to every detected flare to provide standardized reporting and comparison with existing solar event catalogs.
+
+# 📈 Results & Evaluation
+
+The framework was evaluated on **2,783 ground-truth solar flare events** obtained from the **Heliophysics Event Knowledgebase (HEK)**.
+
+## 📊 Statistical Detector Performance
+
+| Detector | True Positives | False Positives | Precision | Recall | F1 Score |
+|------------|---------------:|---------------:|----------:|-------:|---------:|
+| 🥇 Dual-Window | 1625 | **756** | **68.3%** | 58.4% | **0.627** |
+| 📈 CUSUM | **1722** | 1424 | 54.7% | **61.9%** | 0.581 |
+| 🌊 Wavelet | 1672 | 1300 | 56.3% | 60.1% | 0.581 |
+
+---
+
+## 🧠 Neural Network Performance
+
+### Training Performance
+
+| Metric | No Flare | Flare |
+|---------|----------|--------|
+| Precision | 98.42% | 63.12% |
+| Recall | 84.39% | 59.26% |
+| F1 Score | 90.96% | 61.13% |
+
+**Overall Accuracy:** **85.70%**
+
+---
+
+### Test Performance
+
+| Metric | No Flare | Flare |
+|---------|----------|--------|
+| Precision | 95.09% | 41.19% |
+| Recall | 93.91% | **71.99%** |
+| F1 Score | 94.50% | 52.40% |
+
+**Overall Accuracy:** **82.79%**
+
+---
+
+### 📌 Key Observations
+
+- ✅ **Dual-Window Detector** achieved the highest overall F1-score among the statistical detectors.
+- ✅ **CUSUM** provided the highest recall, making it effective for detecting slowly evolving flares.
+- ✅ **Wavelet Detector** demonstrated stable performance across multiple flare timescales.
+- ✅ **Neural Network** achieved high recall, making it suitable for early-warning and screening applications.
+
+---
+
+# 📊 Visualizations
+
+Replace these placeholders with actual project outputs.
+
+## Light Curve Detection
+
+<p align="center">
+<img src="images\lc_plot.jpeg" width="80%">
+</p>
+
+---
+
+## GOES Classification
+
+<p align="center">
+<img src="images\ground_truth.jpeg" width="80%">
+</p>
+
+---
+
+
+# 💻 Usage
+
+## Visualize Light Curve
+
+```bash
+python vis_lc.py lc_files/sample.lc
+```
+
+---
+
+## Visualize PI Spectrum
+
+```bash
+python vis_pi.py pi_files/sample.pi
+```
+
+---
+
+## Download HEK Events
+
+```bash
+python getFlares_data.py
+```
+
+---
+
+## Build Training Dataset
+
+```bash
+python build_flare_dataset.py
+```
+
+---
+
+## Run Detection Pipeline
+
+```bash
+python goes_classify.py lc_files/sample.lc
+```
+
+---
+
+## Train Neural Network
+
+```bash
+python nn_flareclassifier.py
+```
+
+---
+
+## Train Random Forest & Gradient Boosting
+
+```bash
+jupyter notebook train_flare_models.ipynb
+```
+
+---
+
+## Run Random Forest Notebook
+
+```bash
+jupyter notebook rfc.ipynb
+```
+
+---
+
+# 📊 Current Research Status
+
+| Component | Status |
+|-----------|--------|
+| Data Extraction | ✅ Completed |
+| Dataset Preparation | ✅ Completed |
+| Feature Engineering | ✅ Completed |
+| Statistical Detectors | ✅ Completed |
+| Random Forest | ✅ Completed |
+| HistGradientBoosting | ✅ Completed |
+| Neural Network | ✅ Completed |
+| GOES Classification | ✅ Completed |
+| Evaluation Pipeline | ✅ Completed |
+| Probabilistic Detector | 🚧 In Progress |
+| Real-time Deployment | 🚧 Planned |
+
+---
+
+# 🎯 Highlights
+
+- ✅ Real-time compatible framework
+- ✅ Multiple statistical detectors
+- ✅ Random Forest baseline
+- ✅ Gradient Boosting implementation
+- ✅ Neural Network classifier
+- ✅ HEK validation
+- ✅ GOES standardized classification
+- ✅ Interactive visualization
+- ✅ End-to-end machine learning pipeline
+- ✅ Designed for future real-time deployment
+
+---
+# 🗺️ Future Work
+
+The project is under active development, with several planned improvements aimed at enhancing detection accuracy, robustness, and real-time deployment capabilities.
+
+## 🚀 Planned Improvements
+
+- [ ] Complete the **Welch's t-test + Bayesian Log-Likelihood Ratio (LLR)** detector and integrate it into the main pipeline.
+- [ ] Develop an ensemble framework combining statistical detectors and machine learning models for improved robustness.
+- [ ] Explore advanced time-series architectures such as **iTransformer**, **PatchTST**, and **Temporal Fusion Transformer (TFT)**.
+- [ ] Improve feature engineering using additional temporal and statistical descriptors.
+- [ ] Optimize detection latency for real-time space weather monitoring.
+- [ ] Develop a web-based dashboard for visualization and monitoring.
+- [ ] Build a REST API for automated flare detection and classification.
+- [ ] Benchmark the framework against additional public solar flare datasets.
+- [ ] Improve explainability using feature importance and model interpretation techniques.
+- [ ] Containerize the project using Docker for easier deployment.
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+If you have ideas to improve the project, feel free to open an issue or submit a pull request.
+
+### Steps to contribute
+
+1. Fork the repository
+2. Create a new branch
+
+```bash
+git checkout -b feature/YourFeature
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add YourFeature"
+```
+
+4. Push to GitHub
+
+```bash
+git push origin feature/YourFeature
+```
+
+5. Open a Pull Request 🚀
+
+---
+
+# 📜 References
+
+- **ISRO Aditya-L1 Mission**
+- **SoLEXS (Solar Low Energy X-ray Spectrometer) Documentation**
+- **HEK (Heliophysics Event Knowledgebase)**
+- **GOES X-Ray Sensor (XRS) Documentation**
+- **Welch, B. L. (1947). The Generalization of Student's Problem when Several Different Population Variances are Involved.**
+- **Page, E. S. (1954). Continuous Inspection Schemes (CUSUM).**
+- **Mallat, S. (1999). A Wavelet Tour of Signal Processing.**
+- **Breiman, L. (2001). Random Forests. Machine Learning.**
+- **Friedman, J. H. (2001). Greedy Function Approximation: A Gradient Boosting Machine.**
+
+---
+
+# 📄 License
+
+This project is released under the **MIT License**.
+
+See the **LICENSE** file for complete details.
+
+---
+
+# 📬 Contact
+
+**Project:** Solar Flare Detection & Forecasting
+
+**Maintainers:** Krrish Swarnkar, Ram Kumar, Gargi Pareek, Mahitha JV
+                
+
+
+
+---
+
+# ⭐ Support the Project
+
+If you found this project useful,
+
+please consider giving it a ⭐ on GitHub.
+
+It helps the project reach more researchers, developers, and students interested in **Space Weather**, **Machine Learning**, and **Scientific AI**.
+
+---
+
+<div align="center">
+
+## 🌞 Built with ❤️ for Space Weather Research
+
+### If you like this project, don't forget to ⭐ star the repository!
+
+**Happy Coding! 🚀**
+
+</div>
