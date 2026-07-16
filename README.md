@@ -32,6 +32,7 @@
 - 🛰️ GOES Classification
 - 📈 Results & Evaluation
 - 💻 Usage
+- 🚀 Deployment
 - 🗺️ Future Work
 - 🤝 Contributing
 - 📜 References
@@ -838,6 +839,21 @@ jupyter notebook rfc.ipynb
 - ✅ End-to-end machine learning pipeline
 - ✅ Designed for future real-time deployment
 
+---
+# 🚀 Deployment
+🌐 Live Demo
+
+The application is deployed on **Vercel** and is publicly accessible without any local installation.
+
+🔗 **Live Application:** https://solar-flare-forecasting-main.vercel.app/
+
+The deployed application allows users to:
+- 📊 Explore the interactive dashboard
+- ☀️ Visualize solar flare forecasting results
+- 📈 View model predictions and analytics
+- ⚡ Experience the complete application directly in the browser
+
+> **Note:** The live deployment is intended for demonstration and evaluation purposes.
 ---
 # 🗺️ Future Work
 
